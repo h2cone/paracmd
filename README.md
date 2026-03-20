@@ -11,33 +11,39 @@ Run the same shell command across subdirectories in parallel.
 
 ## Getting Started
 
-### Prerequisites
+### Install
 
-- Rust toolchain with Cargo installed
+Download a prebuilt binary from [GitHub Releases](https://github.com/h2cone/paracmd/releases/).
 
-### Build
-
-```powershell
-cargo build --release
-```
-
-### Run
+Optional: put the binary in your `PATH` and run:
 
 ```powershell
-cargo run -- D:\workspaces -- git status
+paracmd --help
 ```
 
-With explicit depth and job settings:
+### Usage
+
+```text
+paracmd [--depth N] [--jobs N] <directory> -- <command> [args...]
+paracmd [--depth N] [--jobs N] <directory> <command> [args...]
+```
+
+`paracmd` scans subdirectories under `<directory>` and runs the command in each matched subdirectory. The root directory itself is not included.
+
+Options:
+
+- `-d`, `--depth <N>`: maximum scan depth, default `1`
+- `-j`, `--jobs <N>`: worker count, default = available CPU parallelism
+- `-h`, `--help`: show help
+
+Examples:
 
 ```powershell
-cargo run -- --depth 2 --jobs 8 D:\workspaces -- cargo test
+paracmd D:\workspaces -- git status
+paracmd --depth 2 --jobs 8 D:\workspaces -- cargo test
 ```
 
-### Test
-
-```powershell
-cargo test
-```
+If any command fails, `paracmd` exits with a non-zero status after printing the per-directory results.
 
 ## License
 
